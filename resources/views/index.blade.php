@@ -13,7 +13,7 @@
     <div class="container" style="padding-top: 5%;">
     <div class="card-body col-md-12">
     <h5 class="card-title">Add user</h5>
-    <form action="{{ route('user.store') }}" method="POST">
+    <form action="{{ route('user.store') }}" method="POST" enctype="multipart/form-data">
 @csrf
 <div class="row">
 <div class="col-md-6" style="padding-top: 1%;">
@@ -38,6 +38,12 @@
     <input type="text" class="form-control" placeholder="Country" name="country">
     </div>
     @error('country')
+    <span>{{$message}}</span>
+     @enderror
+     <div class="col-md-6" style="padding-top: 1%;">
+    <input type="file" class="form-control" name="profile_picture">
+    </div>
+    @error('profile_picture')
     <span>{{$message}}</span>
      @enderror
     <div class="col" style="padding-top: 1%;">
@@ -65,17 +71,19 @@
           <td>Email</td>
           <td>State</td>
           <td>Country</td>
+          <td>Profile Picture</td>
           <td colspan=2>Actions</td>
         </tr>
     </thead>
 <tbody>
-    @foreach($users as $user)
+   @foreach($users as $user)
     <tr>
     <td >{{ $user->id }}</td>
     <td >{{ $user->name }}</td>
     <td>{{ $user->email }}</td>
     <td>{{ $user->state }}</td>
     <td>{{ $user->country }}</td>
+    <td><img src="images/{{ $user->profile_picture }}" style="width:5%;height:5%;"></td>
     <td>
         <a class="btn btn-primary" href="{{ route('user.edit',$user->id) }}">Edit</a></td>
        <td><form action="{{ route('user.destroy',$user->id) }}" method="POST">

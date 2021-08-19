@@ -4,35 +4,42 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 
+
 class UserController extends Controller
 {
     //create user
     public function index(){
-        $users=User::all();
+        $users = User::all();
         return view('index',compact('users'));
     }
-     //store user
+
+    //store user
     public function store(Request $request){
     $request->validate([
         'name'=> 'required',
         'email' => 'required|email',
         'state' => 'required',
-        'country' => 'required'
+        'profile_picture' => 'required'
     ]);
-     User::create([
-         'name' => $request->name,
-         'email' => $request->email,
-         'state' => $request->state,
-         'country' => $request->country
-     ]);
+    
+    $file_name = time().'.'.$request->profile_picture->extension();
+    $request->profile_picture->move(public_path('images'),$file_name);
+    User::create([
+        'name' => $request->name,
+        'email' => $request->email,
+        'state' => $request->state,
+        'country' => $request->country,
+        'profile_picture' => $file_name
+    ]);     
+    
      return redirect()->route('user.index')->with('success','User has been registered');
     }
-      //edit user
+    //edit user
     public function edit($id){
          $user = User::find($id);
         return view('edit',compact('user'));
     }
-        //update user
+    //update user
     public function update(Request $request,$id){
         $request->validate([
             'name'=> 'required',
@@ -49,7 +56,7 @@ class UserController extends Controller
         ]);
         return redirect()->route('user.index')->with('success','User has been updated');
     }
-      //delete user
+    //delete user
     public function destroy($id){
         $user = User::find($id);
         $user->delete();
