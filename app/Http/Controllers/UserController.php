@@ -12,7 +12,7 @@ class UserController extends Controller
         $users = User::all();
         return view('index',compact('users'));
     }
-
+    //store user
     //store user
     public function store(Request $request){
     $request->validate([
